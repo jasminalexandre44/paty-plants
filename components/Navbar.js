@@ -1,36 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import Icon from "@/components/Icon";
+
+function Brand() {
+  return <span className="brand-mark"><span className="brand-icon"><Icon name="leaf" size={23} /></span><span><strong>Paty</strong><em>Plants</em></span></span>;
+}
 
 export default function Navbar() {
-  return (
-    <header className="border-b border-canopy/10 bg-parchment/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-        <Link href="/" className="group flex items-baseline gap-2">
-          <span className="font-display text-2xl italic text-canopy">
-            Paty
-          </span>
-          <span className="font-display text-2xl text-canopy">Plants</span>
-        </Link>
-        <nav className="flex items-center gap-6 text-sm">
-          <Link
-            href="/"
-            className="text-bark/70 transition hover:text-canopy"
-          >
-            Koleksi
-          </Link>
-          <Link href="/admin" className="text-bark/70 transition hover:text-canopy">
-            Admin
-          </Link>
-          <Link href="/login" className="text-bark/70 transition hover:text-canopy">
-            Masuk
-          </Link>
-          <Link
-            href="/add"
-            className="rounded-full bg-canopy px-4 py-2 text-parchment transition hover:bg-moss"
-          >
-            Tambah tanaman
-          </Link>
-        </nav>
-      </div>
-    </header>
-  );
+  const [open, setOpen] = useState(false);
+  function closeMenu() { setOpen(false); }
+  return <header className="site-header"><div className="nav-shell"><Link href="/" aria-label="Paty Plants beranda" onClick={closeMenu}><Brand /></Link><button type="button" className="menu-toggle" aria-label={open ? "Tutup menu" : "Buka menu"} aria-expanded={open} onClick={() => setOpen(!open)}><Icon name={open ? "close" : "menu"} size={22} /></button><nav className={`site-nav ${open ? "is-open" : ""}`}><Link href="/" onClick={closeMenu}><Icon name="collection" size={17} />Koleksi</Link><Link href="/admin" onClick={closeMenu}><Icon name="shield" size={17} />Admin</Link><Link href="/login" onClick={closeMenu}><Icon name="login" size={17} />Masuk</Link><Link href="/add" className="nav-primary" onClick={closeMenu}><Icon name="plus" size={17} />Tambah tanaman</Link></nav></div></header>;
 }

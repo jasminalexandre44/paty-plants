@@ -22,6 +22,13 @@ export const metadata = {
     "Katalog tanaman digital dengan QR code — pindai untuk mengenal setiap tanaman.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#1f3529",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
