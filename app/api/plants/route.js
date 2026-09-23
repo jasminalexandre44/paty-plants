@@ -17,7 +17,6 @@ function splitLines(value) {
 export async function POST(request) {
   try {
     const session = readSession();
-    if (!session) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
     const formData = await request.formData();
 
     const namaLokal = (formData.get("namaLokal") || "").toString().trim();
@@ -49,7 +48,7 @@ export async function POST(request) {
       namaLokal,
       namaIlmiah: (formData.get("namaIlmiah") || "").toString().trim(),
       kategori: (formData.get("kategori") || "Lainnya").toString().trim(),
-      ownerId: session.id,
+      ownerId: session?.id || "public",
       imageUrl,
       ciri: (formData.get("ciri") || "").toString().trim(),
       morfologi: {

@@ -99,6 +99,20 @@ textarea.form-input { min-height: 120px; resize: vertical; }
 .stat-card strong { display: block; margin-top: 0.25rem; color: #1f3529; font-family: var(--font-fraunces); font-size: 1.8rem; }
 .action-button { border: 1px solid rgba(31, 53, 41, 0.14); border-radius: 999px; padding: 0.35rem 0.75rem; font-size: 0.8rem; }
 
+.site-footer { margin-top: 5rem; border-top: 1px solid rgba(31, 53, 41, 0.12); background: rgba(238, 241, 231, 0.72); }
+.footer-shell { width: min(100% - 2 * var(--page-gutter), 1024px); margin: 0 auto; padding: 3rem 0 1.25rem; }
+.footer-main { display: grid; grid-template-columns: minmax(0, 1.8fr) repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.footer-brand { display: inline-flex; align-items: center; gap: 0.65rem; color: #1f3529; font-family: var(--font-fraunces); font-size: 1.35rem; }
+.footer-brand strong { font-style: italic; font-weight: 500; }
+.footer-brand-icon { display: grid; height: 2.35rem; width: 2.35rem; place-items: center; border-radius: 0.7rem; background: #1f3529; color: #f7f6f0; }
+.footer-brand-block p { max-width: 25rem; margin-top: 1rem; color: rgba(58, 50, 41, 0.68); font-size: 0.9rem; line-height: 1.7; }
+.footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+.footer-column h2 { margin-bottom: 0.25rem; color: #1f3529; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.footer-column a { color: rgba(58, 50, 41, 0.68); font-size: 0.9rem; }
+.footer-column a:hover { color: #1f3529; }
+.footer-bottom { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; border-top: 1px solid rgba(31, 53, 41, 0.1); padding-top: 1.25rem; color: rgba(58, 50, 41, 0.52); font-size: 0.78rem; }
+.footer-bottom strong { color: #4c6b4f; font-weight: 600; }
+
 img, svg { max-width: 100%; }
 
 @media (max-width: 700px) {
@@ -113,6 +127,11 @@ img, svg { max-width: 100%; }
   main { width: 100%; }
   .specimen-card:hover { transform: none; }
   .stat-card { padding: 0.9rem; }
+  .site-footer { margin-top: 3.5rem; }
+  .footer-shell { padding-top: 2.25rem; }
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 2rem 1.25rem; }
+  .footer-brand-block { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 0.35rem; margin-top: 2rem; }
 }
 
 @media (max-width: 420px) {

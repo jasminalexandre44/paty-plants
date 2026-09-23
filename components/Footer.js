@@ -1,13 +1,32 @@
+import Link from "next/link";
+import Icon from "@/components/Icon";
+
 export default function Footer() {
   return (
-    <footer className="border-t border-canopy/10 bg-mist/60">
-      <div className="mx-auto max-w-5xl px-6 py-8 text-sm text-bark/70">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <p>Paty Plants — katalog tanaman digital.</p>
-          <p>
-            Developer: Raditia Erlangga Saputra ·{" "}
-            <span className="text-bark/50">Credit: © Respaty Dev</span>
-          </p>
+    <footer className="site-footer">
+      <div className="footer-shell">
+        <div className="footer-main">
+          <div className="footer-brand-block">
+            <Link href="/" className="footer-brand">
+              <span className="footer-brand-icon"><Icon name="leaf" size={21} /></span>
+              <span><strong>Paty</strong> Plants</span>
+            </Link>
+            <p>Katalog tanaman digital untuk mengenal, merawat, dan berbagi pengetahuan tentang tanaman di sekitar kita.</p>
+          </div>
+          <div className="footer-column">
+            <h2>Jelajahi</h2>
+            <Link href="/">Koleksi tanaman</Link>
+            <Link href="/add">Tambah tanaman</Link>
+          </div>
+          <div className="footer-column">
+            <h2>Pengelolaan</h2>
+            <Link href="/login">Masuk admin</Link>
+            <Link href="/admin">Dashboard admin</Link>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Paty Plants. Semua hak dilindungi.</p>
+          <p>Dibuat oleh <strong>Respaty Dev</strong></p>
         </div>
       </div>
     </footer>
