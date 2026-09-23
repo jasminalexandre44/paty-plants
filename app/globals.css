@@ -16,6 +16,46 @@ body {
   background-attachment: fixed;
 }
 
+.form-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #1f3529;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid rgba(31, 53, 41, 0.15);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.7rem 0.9rem;
+  color: #3a3229;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: #4c6b4f;
+  box-shadow: 0 0 0 3px rgba(76, 107, 79, 0.13);
+}
+
+.primary-button {
+  border-radius: 999px;
+  background: #1f3529;
+  padding: 0.75rem 1.5rem;
+  color: #f7f6f0;
+  font-weight: 600;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.primary-button:hover { background: #4c6b4f; transform: translateY(-1px); }
+.primary-button:disabled { opacity: 0.55; }
+.error-box { border-radius: 0.65rem; background: rgba(156, 91, 60, 0.1); padding: 0.75rem 1rem; color: #9c5b3c; }
+.stat-card { border: var(--leaf-line); border-radius: 0.9rem; background: rgba(255, 255, 255, 0.55); padding: 1.1rem 1.25rem; }
+.stat-card span { display: block; color: rgba(58, 50, 41, 0.55); font-size: 0.8rem; }
+.stat-card strong { display: block; margin-top: 0.25rem; color: #1f3529; font-family: var(--font-fraunces); font-size: 1.8rem; }
+.action-button { border: 1px solid rgba(31, 53, 41, 0.14); border-radius: 999px; padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
 .field-divider {
   border-top: var(--leaf-line);
 }

@@ -3,6 +3,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import QrCode from "@/components/QrCode";
+import Link from "next/link";
+import { canManagePlant, readSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +23,7 @@ export default async function PlantDetailPage({ params }) {
   if (!plant) notFound();
 
   const url = `${getSiteUrl()}/plant/${plant.id}`;
+  const session = readSession();
 
   const morfologiRows = [
     ["Daun", plant.morfologi?.daun],
@@ -66,6 +69,10 @@ export default async function PlantDetailPage({ params }) {
           <p className="mt-1 font-display text-lg italic text-bark/60">
             {plant.namaIlmiah}
           </p>
+          <span className="tag-chip mt-4">{plant.kategori || "Lainnya"}</span>
+          {canManagePlant(session, plant) && <Link href={`/plant/${plant.id}/edit`} className="ml-3 inline-flex rounded-full border border-canopy/20 px-4 py-2 text-sm text-canopy hover:bg-mist">Edit data</Link>}
+
+          {plant.ciri && <section className="field-divider mt-8 pt-8"><h2 className="font-display text-2xl text-canopy">Ciri-ciri tanaman</h2><p className="mt-4 whitespace-pre-line text-bark/80">{plant.ciri}</p></section>}
 
           {morfologiRows.length > 0 && (
             <section className="field-divider mt-8 pt-8">
@@ -124,14 +131,12 @@ export default async function PlantDetailPage({ params }) {
               <h2 className="font-display text-2xl text-canopy">
                 Cara pemeliharaan
               </h2>
-              <ul className="mt-4 space-y-2">
-                {plant.pemeliharaan.map((item, i) => (
+              <div className="mt-4 grid gap-6 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-wider text-moss">Bahasa Indonesia</p><ul className="mt-3 space-y-2">{(plant.pemeliharaan?.id || []).map((item, i) => (
                   <li key={i} className="flex gap-3 text-bark/80">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />
                     {item}
                   </li>
-                ))}
-              </ul>
+                ))}</ul></div><div><p className="text-xs font-semibold uppercase tracking-wider text-moss">English</p><ul className="mt-3 space-y-2">{(plant.pemeliharaan?.en || []).map((item, i) => <li key={i} className="flex gap-3 text-bark/80"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />{item}</li>)}</ul></div></div>
             </section>
           )}
         </div>

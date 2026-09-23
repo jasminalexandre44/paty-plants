@@ -23,6 +23,7 @@ export default function PlantCard({ plant }) {
         )}
       </div>
       <div className="space-y-1 p-5">
+        <span className="text-xs font-semibold uppercase tracking-wider text-moss">{plant.kategori || "Lainnya"}</span>
         <h3 className="font-display text-xl text-canopy">
           {plant.namaLokal}
         </h3>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getData, saveData, uploadImage, slugify } from "@/lib/blob";
+import { readSession } from "@/lib/auth";
 
 export async function GET() {
   const data = await getData();
@@ -15,6 +16,8 @@ function splitLines(value) {
 
 export async function POST(request) {
   try {
+    const session = readSession();
+    if (!session) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
     const formData = await request.formData();
 
     const namaLokal = (formData.get("namaLokal") || "").toString().trim();
@@ -45,7 +48,10 @@ export async function POST(request) {
       id,
       namaLokal,
       namaIlmiah: (formData.get("namaIlmiah") || "").toString().trim(),
+      kategori: (formData.get("kategori") || "Lainnya").toString().trim(),
+      ownerId: session.id,
       imageUrl,
+      ciri: (formData.get("ciri") || "").toString().trim(),
       morfologi: {
         daun: (formData.get("daun") || "").toString().trim(),
         batang: (formData.get("batang") || "").toString().trim(),
@@ -62,7 +68,10 @@ export async function POST(request) {
         spesies: (formData.get("spesies") || "").toString().trim(),
       },
       manfaat: splitLines(formData.get("manfaat")),
-      pemeliharaan: splitLines(formData.get("pemeliharaan")),
+      pemeliharaan: {
+        id: splitLines(formData.get("pemeliharaanId")),
+        en: splitLines(formData.get("pemeliharaanEn")),
+      },
       createdAt: new Date().toISOString(),
     };
 

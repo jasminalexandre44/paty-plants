@@ -17,6 +17,12 @@ export default function Navbar() {
           >
             Koleksi
           </Link>
+          <Link href="/admin" className="text-bark/70 transition hover:text-canopy">
+            Admin
+          </Link>
+          <Link href="/login" className="text-bark/70 transition hover:text-canopy">
+            Masuk
+          </Link>
           <Link
             href="/add"
             className="rounded-full bg-canopy px-4 py-2 text-parchment transition hover:bg-moss"

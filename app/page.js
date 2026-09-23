@@ -5,6 +5,11 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const plants = await getData();
+  const groups = plants.reduce((result, plant) => {
+    const category = plant.kategori || "Lainnya";
+    (result[category] ||= []).push(plant);
+    return result;
+  }, {});
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-14">
@@ -25,13 +30,12 @@ export default async function HomePage() {
           <p className="text-bark/60">
             Belum ada tanaman. Mulai dengan menambahkan tanaman pertama.
           </p>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {plants.map((plant) => (
-              <PlantCard key={plant.id} plant={plant} />
-            ))}
-          </div>
-        )}
+        ) : Object.entries(groups).map(([category, categoryPlants]) => (
+          <section key={category} className="mb-14 last:mb-0">
+            <div className="mb-5 flex items-end justify-between"><div><span className="text-xs font-semibold uppercase tracking-[0.18em] text-moss">Koleksi</span><h2 className="mt-1 font-display text-2xl text-canopy">{category}</h2></div><span className="text-sm text-bark/50">{categoryPlants.length} tanaman</span></div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">{categoryPlants.map((plant) => <PlantCard key={plant.id} plant={plant} />)}</div>
+          </section>
+        ))}
       </div>
     </div>
   );
