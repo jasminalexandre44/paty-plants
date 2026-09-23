@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --leaf-line: 1px solid rgba(31, 53, 41, 0.12);
+}
+
+body {
+  background-image: radial-gradient(
+      circle at 100% 0%,
+      rgba(143, 166, 135, 0.14),
+      transparent 45%
+    ),
+    radial-gradient(circle at 0% 100%, rgba(156, 91, 60, 0.08), transparent 40%);
+  background-attachment: fixed;
+}
+
+.field-divider {
+  border-top: var(--leaf-line);
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(143, 166, 135, 0.16);
+  color: #1f3529;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.specimen-card {
+  border: var(--leaf-line);
+  background: #fbfaf5;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.specimen-card:hover {
+  border-color: rgba(76, 107, 79, 0.45);
+  transform: translateY(-2px);
+}
+
+::selection {
+  background: #8fa687;
+  color: #ffffff;
+}
