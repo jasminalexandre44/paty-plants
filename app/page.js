@@ -1,10 +1,10 @@
-import { getData } from "@/lib/blob";
+import { getPlants } from "@/lib/storage";
 import PlantCard from "@/components/PlantCard";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const plants = await getData();
+  const plants = await getPlants();
   const groups = plants.reduce((result, plant) => {
     const category = plant.kategori || "Lainnya";
     (result[category] ||= []).push(plant);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { compressImage } from "@/lib/compressImage";
 
 const categories = ["Tanaman Pangan", "Tanaman Hias", "Tanaman Obat", "Tanaman Perkebunan", "Tanaman Buah", "Lainnya"];
 const input = "form-input";
@@ -20,12 +21,12 @@ export default function AddPlantPage() {
     setSaving(true); setError("");
     const data = new FormData();
     Object.entries(form).forEach(([key, value]) => data.append(key, value));
-    if (image) data.append("image", image);
     try {
+      if (image) data.append("image", await compressImage(image));
       const response = await fetch("/api/plants", { method: "POST", body: data });
       const result = await response.json();
       if (!response.ok) { setError(result.error || "Tanaman gagal disimpan."); setSaving(false); return; }
-      router.push(`/plant/${result.plant.id}`); router.refresh();
+      router.push("/?added=1"); router.refresh();
     } catch {
       setError("Tidak dapat terhubung ke server. Coba lagi.");
       setSaving(false);

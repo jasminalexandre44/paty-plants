@@ -1,10 +1,9 @@
-import { getData } from "@/lib/blob";
+import { getPlant } from "@/lib/storage";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import QrCode from "@/components/QrCode";
 import Link from "next/link";
-import { canManagePlant, readSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -17,13 +16,11 @@ function getSiteUrl() {
 }
 
 export default async function PlantDetailPage({ params }) {
-  const plants = await getData();
-  const plant = plants.find((p) => p.id === params.id);
+  const plant = await getPlant(params.id);
 
   if (!plant) notFound();
 
   const url = `${getSiteUrl()}/plant/${plant.id}`;
-  const session = readSession();
 
   const morfologiRows = [
     ["Daun", plant.morfologi?.daun],
@@ -70,7 +67,7 @@ export default async function PlantDetailPage({ params }) {
             {plant.namaIlmiah}
           </p>
           <span className="tag-chip mt-4">{plant.kategori || "Lainnya"}</span>
-          {canManagePlant(session, plant) && <Link href={`/plant/${plant.id}/edit`} className="ml-3 inline-flex rounded-full border border-canopy/20 px-4 py-2 text-sm text-canopy hover:bg-mist">Edit data</Link>}
+          <Link href={`/plant/${plant.id}/edit`} className="ml-3 inline-flex rounded-full border border-canopy/20 px-4 py-2 text-sm text-canopy hover:bg-mist">Usulkan edit</Link>
 
           {plant.ciri && <section className="field-divider mt-8 pt-8"><h2 className="font-display text-2xl text-canopy">Ciri-ciri tanaman</h2><p className="mt-4 whitespace-pre-line text-bark/80">{plant.ciri}</p></section>}
 

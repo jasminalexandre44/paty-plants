@@ -1,57 +1,65 @@
 import { NextResponse } from "next/server";
-import { getData, saveData, uploadImage } from "@/lib/blob";
-import { canManagePlant, readSession } from "@/lib/auth";
+import { deletePlant, getPlant, updatePlant, uploadImage } from "@/lib/storage";
+import { readSession } from "@/lib/auth";
 
 export async function GET(_request, { params }) {
-  const data = await getData();
-  const plant = data.find((p) => p.id === params.id);
-
-  if (!plant) {
-    return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
+  try {
+    const plant = await getPlant(params.id);
+    if (!plant) return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
+    return NextResponse.json(plant);
+  } catch (error) {
+    console.error("Gagal membaca tanaman:", error);
+    return NextResponse.json({ error: "Database belum terhubung." }, { status: 503 });
   }
+}
 
-  return NextResponse.json(plant);
+function splitLines(value) {
+  return (value || "").toString().split("\n").map((item) => item.trim()).filter(Boolean);
 }
 
 export async function PUT(request, { params }) {
-  const session = readSession();
-  const data = await getData();
-  const index = data.findIndex((plant) => plant.id === params.id);
-  if (index < 0) return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
-  if (!canManagePlant(session, data[index])) return NextResponse.json({ error: "Kamu hanya dapat mengubah tanaman milikmu." }, { status: 403 });
-
   try {
+    const session = readSession();
+    const current = await getPlant(params.id);
+    if (!current) return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
+
     const formData = await request.formData();
-    const current = data[index];
     const imageFile = formData.get("image");
-    let imageUrl = current.imageUrl;
+    let imageUrl = current.imageUrl || "";
     if (imageFile && typeof imageFile === "object" && imageFile.size > 0) imageUrl = await uploadImage(imageFile);
-    const split = (key) => (formData.get(key) || "").toString().split("\n").map((item) => item.trim()).filter(Boolean);
-    const updated = {
-      ...current,
+
+    const changes = {
       namaLokal: (formData.get("namaLokal") || current.namaLokal).toString().trim(),
       namaIlmiah: (formData.get("namaIlmiah") || "").toString().trim(),
       kategori: (formData.get("kategori") || "Lainnya").toString().trim(),
       imageUrl,
       ciri: (formData.get("ciri") || "").toString().trim(),
-      manfaat: split("manfaat"),
-      pemeliharaan: { id: split("pemeliharaanId"), en: split("pemeliharaanEn") },
+      manfaat: splitLines(formData.get("manfaat")),
+      pemeliharaan: { id: splitLines(formData.get("pemeliharaanId")), en: splitLines(formData.get("pemeliharaanEn")) },
     };
-    data[index] = updated;
-    await saveData(data);
-    return NextResponse.json({ plant: updated });
-  } catch (err) {
-    console.error("Gagal mengubah tanaman:", err);
+
+    if (!session || session.role !== "admin") {
+      await updatePlant(params.id, { pendingEdit: { ...changes, id: params.id, submittedAt: new Date().toISOString() } });
+      return NextResponse.json({ pending: true, message: "Usulan edit dikirim dan menunggu persetujuan admin." });
+    }
+
+    const plant = await updatePlant(params.id, { ...changes, pendingEdit: null });
+    return NextResponse.json({ plant });
+  } catch (error) {
+    console.error("Gagal mengubah tanaman:", error);
     return NextResponse.json({ error: "Gagal menyimpan perubahan." }, { status: 500 });
   }
 }
 
 export async function DELETE(_request, { params }) {
-  const session = readSession();
-  const data = await getData();
-  const plant = data.find((item) => item.id === params.id);
-  if (!plant) return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
-  if (!canManagePlant(session, plant)) return NextResponse.json({ error: "Kamu hanya dapat menghapus tanaman milikmu." }, { status: 403 });
-  await saveData(data.filter((item) => item.id !== params.id));
-  return NextResponse.json({ ok: true });
+  try {
+    const session = readSession();
+    if (!session || session.role !== "admin") return NextResponse.json({ error: "Hanya admin yang dapat menghapus tanaman." }, { status: 403 });
+    const deleted = await deletePlant(params.id);
+    if (!deleted) return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("Gagal menghapus tanaman:", error);
+    return NextResponse.json({ error: "Gagal menghapus tanaman." }, { status: 500 });
+  }
 }
