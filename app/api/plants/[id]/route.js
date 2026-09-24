@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { deletePlant, getPlant, updatePlant, uploadImage } from "@/lib/storage";
 import { readSession } from "@/lib/auth";
+import { rateLimit, requestKey } from "@/lib/rateLimit";
 
 export async function GET(_request, { params }) {
   try {
@@ -20,6 +21,10 @@ function splitLines(value) {
 export async function PUT(request, { params }) {
   try {
     const session = readSession();
+    if (!session) {
+      const limit = rateLimit(requestKey(request, "edit-plant"), 10);
+      if (!limit.ok) return NextResponse.json({ error: `Terlalu banyak usulan. Coba lagi dalam ${limit.retryAfter} detik.` }, { status: 429, headers: { "Retry-After": String(limit.retryAfter) } });
+    }
     const current = await getPlant(params.id);
     if (!current) return NextResponse.json({ error: "Tanaman tidak ditemukan." }, { status: 404 });
 
@@ -37,6 +42,7 @@ export async function PUT(request, { params }) {
       manfaat: splitLines(formData.get("manfaat")),
       pemeliharaan: { id: splitLines(formData.get("pemeliharaanId")), en: splitLines(formData.get("pemeliharaanEn")) },
     };
+    if (!changes.pemeliharaan.id.length || !changes.pemeliharaan.en.length) return NextResponse.json({ error: "Cara perawatan Bahasa Indonesia dan English wajib diisi." }, { status: 400 });
 
     if (!session || session.role !== "admin") {
       await updatePlant(params.id, { pendingEdit: { ...changes, id: params.id, submittedAt: new Date().toISOString() } });

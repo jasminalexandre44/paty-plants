@@ -95,6 +95,18 @@ textarea.form-input { min-height: 120px; resize: vertical; }
 .primary-button:disabled { opacity: 0.55; }
 .error-box { border-radius: 0.65rem; background: rgba(156, 91, 60, 0.1); padding: 0.75rem 1rem; color: #9c5b3c; }
 .success-box { border-radius: 0.65rem; background: rgba(76, 107, 79, 0.12); padding: 0.75rem 1rem; color: #4c6b4f; }
+.skeleton { overflow: hidden; position: relative; border-radius: 0.7rem; background: rgba(143, 166, 135, 0.2); }
+.skeleton::after { position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent); content: ""; animation: skeleton-shimmer 1.4s infinite; }
+.skeleton-chip { height: 1.7rem; width: 9rem; }
+.skeleton-title { height: 3rem; max-width: 34rem; }
+.skeleton-copy { height: 3.5rem; max-width: 42rem; }
+.skeleton-card { height: 19rem; }
+.skeleton-photo { aspect-ratio: 4 / 3; }
+.skeleton-section { height: 12rem; }
+.skeleton-qr { height: 20rem; }
+.skeleton-stat { height: 6rem; }
+.skeleton-table { height: 24rem; }
+@keyframes skeleton-shimmer { 100% { transform: translateX(100%); } }
 .stat-card { border: var(--leaf-line); border-radius: 0.9rem; background: rgba(255, 255, 255, 0.55); padding: 1.1rem 1.25rem; }
 .stat-card span { display: block; color: rgba(58, 50, 41, 0.55); font-size: 0.8rem; }
 .stat-card strong { display: block; margin-top: 0.25rem; color: #1f3529; font-family: var(--font-fraunces); font-size: 1.8rem; }
