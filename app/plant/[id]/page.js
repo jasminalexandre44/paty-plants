@@ -21,6 +21,8 @@ export default async function PlantDetailPage({ params }) {
   if (!plant) notFound();
 
   const url = `${getSiteUrl()}/plant/${plant.id}`;
+  const careId = plant.pemeliharaan?.id || [];
+  const careEn = plant.pemeliharaan?.en || [];
 
   const morfologiRows = [
     ["Daun", plant.morfologi?.daun],
@@ -123,17 +125,17 @@ export default async function PlantDetailPage({ params }) {
             </section>
           )}
 
-          {plant.pemeliharaan?.length > 0 && (
+          {(careId.length > 0 || careEn.length > 0) && (
             <section className="field-divider mt-8 pt-8">
               <h2 className="font-display text-2xl text-canopy">
                 Cara pemeliharaan
               </h2>
-              <div className="mt-4 grid gap-6 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-wider text-moss">Bahasa Indonesia</p><ul className="mt-3 space-y-2">{(plant.pemeliharaan?.id || []).map((item, i) => (
+              <div className="mt-4 grid gap-6 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-wider text-moss">Bahasa Indonesia</p><ul className="mt-3 space-y-2">{careId.map((item, i) => (
                   <li key={i} className="flex gap-3 text-bark/80">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />
                     {item}
                   </li>
-                ))}</ul></div><div><p className="text-xs font-semibold uppercase tracking-wider text-moss">English</p><ul className="mt-3 space-y-2">{(plant.pemeliharaan?.en || []).map((item, i) => <li key={i} className="flex gap-3 text-bark/80"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />{item}</li>)}</ul></div></div>
+                ))}</ul></div><div><p className="text-xs font-semibold uppercase tracking-wider text-moss">English</p><ul className="mt-3 space-y-2">{careEn.map((item, i) => <li key={i} className="flex gap-3 text-bark/80"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />{item}</li>)}</ul></div></div>
             </section>
           )}
         </div>
